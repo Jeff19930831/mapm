@@ -1,0 +1,8 @@
+device: win-desktop
+agent: claude
+project: MAPM
+branch: agent/claude/complete-phase1
+task: Complete all Phase 1 tasks + project reorganization
+status: done
+started: 2026-04-27T09:15:00
+updated: 2026-04-27T09:40:00

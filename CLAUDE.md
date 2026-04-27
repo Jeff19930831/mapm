@@ -66,6 +66,30 @@ This project uses the GSD (Get Shit Done) workflow:
 - Update specs/api.yaml BEFORE changing any API
 - Commit status changes at the end of every session
 
+## Workspace Directories
+
+| Agent | Directory | Purpose |
+|-------|-----------|---------|
+| Claude | `Win_Claude_Work` (Obsidian Vault) | Docs, knowledge base, notes |
+| Kimi | `Win_Kimi` (Obsidian Vault) | Docs, knowledge base, notes |
+| Code | GitHub repositories | Actual code, managed via `git` |
+
+## External Tool Management
+
+### GitHub
+
+- All project code is version-controlled and hosted via **GitHub** by default.
+- Initialize projects with a GitHub repository (`gh repo create` or web UI).
+- Commit changes regularly to keep local and remote in sync.
+- Agent handles code-level operations; user manages `gh`/`git` installation and login.
+
+### Obsidian
+
+- All project docs, knowledge bases, and progress notes are managed via **Obsidian**.
+- `Win_Claude_Work` is Claude's Obsidian Vault.
+- `Win_Kimi` is Kimi's Obsidian Vault.
+- Use Markdown format for all docs so Obsidian can parse and link them.
+
 ## Current Phase
 
 Phase 1: Core Status System — See `.planning/ROADMAP.md`

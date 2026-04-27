@@ -1,0 +1,139 @@
+# MAPM API Specification
+# Version: 1.0.0
+# Status: Draft
+# Last updated: 2026-04-27
+
+openapi: 3.0.0
+info:
+  title: Multi-Agent Project Manager API
+  version: 1.0.0
+  description: |
+    File-based coordination API for multi-device, multi-agent development.
+    This is a conceptual API — actual implementation is file-based.
+
+paths:
+  /status/{device}:
+    get:
+      summary: Get device status
+      parameters:
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device status
+          content:
+            application/yaml:
+              schema:
+                $ref: "#/components/schemas/Status"
+
+    put:
+      summary: Update device status
+      parameters:
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/yaml:
+            schema:
+              $ref: "#/components/schemas/Status"
+      responses:
+        "200":
+          description: Status updated
+
+  /events/{device}:
+    get:
+      summary: Get device event log
+      parameters:
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Event log entries
+
+    post:
+      summary: Append event to log
+      parameters:
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        "201":
+          description: Event appended
+
+  /status:
+    get:
+      summary: Get all device statuses
+      responses:
+        "200":
+          description: All statuses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Status"
+
+  /tasks:
+    get:
+      summary: Get task list
+      responses:
+        "200":
+          description: TODO.md content
+          content:
+            text/markdown:
+              schema:
+                type: string
+
+components:
+  schemas:
+    Status:
+      type: object
+      required:
+        - device
+        - agent
+        - status
+      properties:
+        device:
+          type: string
+          description: Device name
+        agent:
+          type: string
+          enum: [claude, kimi, codex, none]
+        project:
+          type: string
+        branch:
+          type: string
+        task:
+          type: string
+        status:
+          type: string
+          enum: [idle, in_progress, done, blocked]
+        started:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time

@@ -1,0 +1,59 @@
+# Ignore everything by default in user home
+# Only track MAPM project files explicitly
+
+# Windows system
+AppData/
+Application Data/
+Cookies/
+Local Settings/
+My Documents/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+Templates/
+「开始」菜单/
+Contacts/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+Links/
+Music/
+OneDrive/
+Pictures/
+Saved Games/
+Searches/
+Videos/
+WPS Cloud Files/
+WPSDrive/
+NTUSER*
+ntuser*
+
+# User config (not project-related)
+.cache/
+.cc-switch/
+.chelper/
+.claude.json
+.claude/
+.codepilot/
+.codex/
+.gitconfig
+.hermes*
+.kimi/
+.local/
+.matplotlib/
+.ollama/
+.ssh/
+.wechat-cli/
+.zai/
+
+# Misc files
+*.bat
+email_*
+glm5-*
+hermes-agent/
+kdocs-automation/
+deploy-*.bat
+wechat_daily_wsl.sh
+wechat_decrypt_test/

@@ -1,0 +1,32 @@
+{
+  "name": "browser_drag",
+  "description": "Perform a drag and drop operation. Drags from a source element to a target element or coordinates.\n",
+  "arguments": {
+    "type": "object",
+    "properties": {
+      "sourceRef": {
+        "description": "Reference of the element to drag from",
+        "type": "string"
+      },
+      "targetRef": {
+        "description": "Reference of the element to drop onto",
+        "type": "string"
+      },
+      "targetX": {
+        "description": "X coordinate to drop at (relative to viewport). Use with targetY instead of targetRef for coordinate-based drops.",
+        "type": "number"
+      },
+      "targetY": {
+        "description": "Y coordinate to drop at (relative to viewport). Use with targetX instead of targetRef for coordinate-based drops.",
+        "type": "number"
+      },
+      "viewId": {
+        "description": "Target browser tab ID. If omitted, uses the last interacted tab.",
+        "type": "string"
+      }
+    },
+    "required": [
+      "sourceRef"
+    ]
+  }
+}

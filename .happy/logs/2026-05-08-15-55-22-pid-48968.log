@@ -1,0 +1,83 @@
+[15:55:22.951] [ClaudeSettings] Successfully read Claude settings from C:\Users\lk\.claude\settings.json 
+[15:55:22.952] [ClaudeSettings] includeCoAuthoredBy: undefined 
+[15:55:25.655] Starting happy CLI with args:  [
+  'C:\\Program Files\\nodejs\\node.exe',
+  'C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\dist\\index.mjs',
+  'omx',
+  '--madmax',
+  '--high'
+]
+[15:55:25.671] [AUTH] Starting auth and machine setup... 
+[15:55:25.674] [AUTH] Using existing credentials 
+[15:55:25.677] [AUTH] Machine ID: 44deb2a4-fda0-4e5c-820a-bdfd56e3479b 
+[15:55:25.677] Ensuring Happy background service is running & matches our version... 
+[15:55:25.678] [DAEMON CONTROL] Checking if daemon is running same version 
+[15:55:25.679] [DAEMON RUN] Daemon PID not running, cleaning up state 
+[15:55:25.680] [DAEMON RUN] Daemon state file removed 
+[15:55:25.681] [DAEMON CONTROL] No daemon running, returning false 
+[15:55:25.681] Starting Happy background service... 
+[15:55:25.682] [SPAWN HAPPY CLI] Spawning: happy daemon start-sync in D:\Workspace 
+[15:55:29.883] Happy background service is ready 
+[15:55:29.884] [CLAUDE] ===== CLAUDE MODE STARTING ===== 
+[15:55:29.885] [CLAUDE] This is the Claude agent, NOT Gemini 
+[15:55:29.885] In production, skipping message inspection 
+[15:55:29.886] [START] Happy process started 
+ {
+  "workingDirectory": "D:\\Workspace",
+  "processArgv": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\dist\\index.mjs",
+    "omx",
+    "--madmax",
+    "--high"
+  ],
+  "happyDir": "C:\\Users\\lk\\.happy",
+  "serverUrl": "https://api.cluster-fluster.com",
+  "logsDir": "C:\\Users\\lk\\.happy\\logs",
+  "processPid": 48968,
+  "nodeVersion": "v24.13.1",
+  "platform": "win32",
+  "arch": "x64"
+}
+[15:55:29.886] [START] Options: startedBy=undefined, startingMode=undefined 
+[15:55:29.887] Using machineId: 44deb2a4-fda0-4e5c-820a-bdfd56e3479b 
+[15:55:30.678] [API] Machine 44deb2a4-fda0-4e5c-820a-bdfd56e3479b registered/updated with server 
+[15:55:30.964] Session created/loaded: cmowmeiey2n8h0r0uavfkl5kw (tag: 6c99f25d-f4ae-4471-acb3-87fe4335efa5) 
+[15:55:30.966] Session created: cmowmeiey2n8h0r0uavfkl5kw 
+[15:55:30.966] [START] Reporting session cmowmeiey2n8h0r0uavfkl5kw to daemon 
+[15:55:30.975] [START] Reported session cmowmeiey2n8h0r0uavfkl5kw to daemon 
+[15:55:30.979] [happyMCP] server:start sessionId=cmowmeiey2n8h0r0uavfkl5kw 
+[15:55:30.981] [happyMCP] server:ready sessionId=cmowmeiey2n8h0r0uavfkl5kw url=http://127.0.0.1:49708/ 
+[15:55:30.982] [START] Happy MCP server started at http://127.0.0.1:49708/ 
+[15:55:30.984] [hookServer] Started on port 49709 
+[15:55:30.984] [START] Hook server started on port 49709 
+[15:55:30.985] [generateHookSettings] Created hook settings file: C:\Users\lk\.happy\tmp\hooks\session-hook-48968.json 
+[15:55:30.986] [START] Generated hook settings file: C:\Users\lk\.happy\tmp\hooks\session-hook-48968.json 
+[15:55:30.986] Session: cmowmeiey2n8h0r0uavfkl5kw 
+[15:55:30.986] Logs: C:\Users\lk\.happy\logs\2026-05-08-15-55-22-pid-48968.log 
+[15:55:30.987] In production, skipping message inspection 
+[15:55:30.987] Updating agent state 
+ null
+[15:55:30.988] [MessageQueue2] Initialized 
+[15:55:30.988] [loop] Iteration with mode: local 
+[15:55:30.990] [local]: launch 
+[15:55:30.991] [ClaudeLocal] Fresh start, session ID will be provided by hook 
+[15:55:30.991] [ClaudeLocal] Using hook settings: C:\Users\lk\.happy\tmp\hooks\session-hook-48968.json 
+[15:55:30.992] [ClaudeLocal] Spawning launcher: C:\Users\lk\AppData\Roaming\npm\node_modules\happy\scripts\claude_local_launcher.cjs 
+[15:55:30.992] [ClaudeLocal] Args: ["--append-system-prompt","ALWAYS when you start a new chat - you must call a tool \"mcp__happy__change_title\" to set a chat title. When you think chat title is not relevant anymore - call the tool again to change it. When chat name is too generic and you have a change to make it more specific - call the tool again to change it. This title is needed to easily find the chat in the future. Help human.\n\nWhen making commit messages, instead of just giving co-credit to Claude, also give credit to Happy like so:\n\n<main commit message>\n\nGenerated with [Claude Code](https://claude.ai/code)\nvia [Happy](https://happy.engineering)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nCo-Authored-By: Happy <yesreply@happy.engineering>","--mcp-config","{\"mcpServers\":{\"happy\":{\"type\":\"http\",\"url\":\"http://127.0.0.1:49708/\"}}}","--allowedTools","mcp__happy__change_title","omx","--madmax","--high","--settings","C:\\Users\\lk\\.happy\\tmp\\hooks\\session-hook-48968.json"] 
+[15:55:31.515] [local]: launch error ExitCodeError: Process exited with code: 1
+    at ChildProcess.<anonymous> (file:///C:/Users/lk/AppData/Roaming/npm/node_modules/happy/dist/index-q9G4ktSK.mjs:673:20)
+    at ChildProcess.emit (node:events:520:35)
+    at cp.emit (C:\Users\lk\AppData\Roaming\npm\node_modules\happy\node_modules\cross-spawn\lib\enoent.js:34:29)
+    at ChildProcess._handle.onexit (node:internal/child_process:294:12) {
+  exitCode: 1
+}
+[15:55:31.517] [Session] Cleaned up resources 
+[15:55:31.517] Waiting for socket to flush... 
+[15:55:31.518] Closing session... 
+[15:55:31.518] [API] socket.close() called 
+[15:55:31.519] [happyMCP] server:stop sessionId=cmowmeiey2n8h0r0uavfkl5kw 
+[15:55:31.520] Stopped Happy MCP server 
+[15:55:31.521] [hookServer] Stopped 
+[15:55:31.522] [generateHookSettings] Cleaned up hook settings file: C:\Users\lk\.happy\tmp\hooks\session-hook-48968.json 
+[15:55:31.522] Stopped Hook server and cleaned up settings file 

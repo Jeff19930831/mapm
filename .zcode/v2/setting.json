@@ -1,0 +1,22 @@
+{
+  "recentProjects": [],
+  "locale": "zh-CN",
+  "taskAutoArchiveEnabled": false,
+  "taskAutoArchiveOlderThanDays": 7,
+  "enabledBuiltinAgentCliProviders": [
+    "glm",
+    "claude",
+    "codex",
+    "gemini",
+    "opencode"
+  ],
+  "acpTrafficProxyEnabled": false,
+  "lastWorkspaceSession": [
+    {
+      "kind": "local",
+      "workspacePath": "C:\\Users\\lk\\ZCodeProject"
+    }
+  ],
+  "lastActiveTabIndex": 0,
+  "settingsSyncFirstRunPromptHandled": true
+}

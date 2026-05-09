@@ -1,0 +1,66 @@
+{
+  "version": 2,
+  "plugins": {
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "project",
+        "projectPath": "C:\\Users\\lk",
+        "installPath": "C:\\Users\\lk\\.claude\\plugins\\cache\\claude-plugins-official\\frontend-design\\bb7730114d87",
+        "version": "bb7730114d87",
+        "installedAt": "2026-04-20T07:56:46.520Z",
+        "lastUpdated": "2026-04-20T07:56:46.520Z",
+        "gitCommitSha": "bb7730114d873b91acd477e696066f217f882391"
+      }
+    ],
+    "autoresearch@autoresearch": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\lk\\.claude\\plugins\\cache\\autoresearch\\autoresearch\\1.9.12",
+        "version": "1.9.12",
+        "installedAt": "2026-04-28T00:39:30.333Z",
+        "lastUpdated": "2026-04-28T00:39:30.333Z",
+        "gitCommitSha": "f226ffbf558c33dfdea86e8eb24207d7b73c8891"
+      }
+    ],
+    "claude-hud@claude-hud": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\lk\\.claude\\plugins\\cache\\claude-hud\\claude-hud\\0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-04-28T07:06:45.834Z",
+        "lastUpdated": "2026-04-28T07:06:45.834Z",
+        "gitCommitSha": "3d9f7b7a78b1c20c049c6fd7500fa180c2d4fe0b"
+      }
+    ],
+    "warp@claude-code-warp": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\lk\\.claude\\plugins\\cache\\claude-code-warp\\warp\\2.0.0",
+        "version": "2.0.0",
+        "installedAt": "2026-05-08T00:49:36.546Z",
+        "lastUpdated": "2026-05-08T00:49:36.546Z",
+        "gitCommitSha": "b8ad3cc6c1e40b2d2a944f900a4ae0904a54dd7f"
+      }
+    ],
+    "skill-creator@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\lk\\.claude\\plugins\\cache\\claude-plugins-official\\skill-creator\\bb7730114d87",
+        "version": "bb7730114d87",
+        "installedAt": "2026-05-08T01:52:35.122Z",
+        "lastUpdated": "2026-05-08T01:52:35.122Z",
+        "gitCommitSha": "bb7730114d873b91acd477e696066f217f882391"
+      }
+    ],
+    "everything-claude-code@everything-claude-code": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\lk\\.claude\\plugins\\cache\\everything-claude-code\\everything-claude-code\\2.0.0-rc.1",
+        "version": "2.0.0-rc.1",
+        "installedAt": "2026-05-08T02:18:07.493Z",
+        "lastUpdated": "2026-05-08T02:18:07.493Z",
+        "gitCommitSha": "841beea45cb25ba51f29fa45b7e272938d19b80a"
+      }
+    ]
+  }
+}

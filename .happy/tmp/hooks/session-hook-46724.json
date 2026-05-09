@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\scripts\\session_hook_forwarder.cjs\" 56104"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "C:\\Users\\lk\\.claude\\plugins\\marketplaces\\claude-plugins-official",
+    "lastUpdated": "2026-04-20T07:48:38.622Z"
+  },
+  "claude-hud": {
+    "source": {
+      "source": "github",
+      "repo": "jarrodwatts/claude-hud"
+    },
+    "installLocation": "C:\\Users\\lk\\.claude\\plugins\\marketplaces\\claude-hud",
+    "lastUpdated": "2026-04-21T01:00:01.163Z"
+  },
+  "autoresearch": {
+    "source": {
+      "source": "github",
+      "repo": "uditgoenka/autoresearch"
+    },
+    "installLocation": "C:\\Users\\lk\\.claude\\plugins\\marketplaces\\autoresearch",
+    "lastUpdated": "2026-04-28T00:39:23.580Z"
+  },
+  "claude-code-warp": {
+    "source": {
+      "source": "github",
+      "repo": "warpdotdev/claude-code-warp"
+    },
+    "installLocation": "C:\\Users\\lk\\.claude\\plugins\\marketplaces\\claude-code-warp",
+    "lastUpdated": "2026-05-08T00:48:08.620Z"
+  },
+  "everything-claude-code": {
+    "source": {
+      "source": "git",
+      "url": "https://github.com/affaan-m/everything-claude-code.git"
+    },
+    "installLocation": "C:\\Users\\lk\\.claude\\plugins\\marketplaces\\everything-claude-code",
+    "lastUpdated": "2026-05-08T02:17:56.772Z"
+  }
+}

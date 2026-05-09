@@ -1,0 +1,5 @@
+{
+  "version": "1.0.20",
+  "releaseDate": "2026-04-27",
+  "changelog": "update pptx skill planning workflow to content-first approach, add guidance about pptgenjs"
+}

@@ -1,0 +1,101 @@
+[13:57:55.109] [ClaudeSettings] Successfully read Claude settings from C:\Users\lk\.claude\settings.json 
+[13:57:55.111] [ClaudeSettings] includeCoAuthoredBy: undefined 
+[13:57:57.927] Starting happy CLI with args:  [
+  'C:\\Program Files\\nodejs\\node.exe',
+  'C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\dist\\index.mjs',
+  'daemon',
+  'start-sync'
+]
+[13:57:57.929] [DAEMON RUN] Starting daemon process... 
+[13:57:57.929] In production, skipping message inspection 
+[13:57:57.930] [DAEMON RUN] Environment 
+ {
+  "workingDirectory": "D:\\Workspace",
+  "processArgv": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\dist\\index.mjs",
+    "daemon",
+    "start-sync"
+  ],
+  "happyDir": "C:\\Users\\lk\\.happy",
+  "serverUrl": "https://api.cluster-fluster.com",
+  "logsDir": "C:\\Users\\lk\\.happy\\logs",
+  "processPid": 57056,
+  "nodeVersion": "v24.13.1",
+  "platform": "win32",
+  "arch": "x64"
+}
+[13:57:57.931] [DAEMON CONTROL] Checking if daemon is running same version 
+[13:57:57.931] [DAEMON CONTROL] No daemon running, returning false 
+[13:57:57.932] [DAEMON RUN] Daemon version mismatch detected, restarting daemon with current CLI version 
+[13:57:57.932] No daemon state found 
+[13:57:57.936] [caffeinate] Not on macOS, skipping caffeinate 
+[13:57:57.936] [AUTH] Starting auth and machine setup... 
+[13:57:57.938] [AUTH] Using existing credentials 
+[13:57:57.941] [AUTH] Machine ID: 44deb2a4-fda0-4e5c-820a-bdfd56e3479b 
+[13:57:57.941] [DAEMON RUN] Auth and machine setup complete 
+[13:57:57.971] [CONTROL SERVER] Started on port 61033 
+[13:57:57.973] [DAEMON RUN] Daemon state written 
+[13:57:58.082] [CONTROL SERVER] Listing 0 sessions 
+[13:57:58.661] [CONTROL SERVER] Session started: cmowi7cqh2flhxd0ur4kitw90 
+[13:57:58.662] In production, skipping message inspection 
+[13:57:58.663] [DAEMON RUN] Session reported 
+ {
+  "path": "D:\\Workspace",
+  "host": "DESKTOP-920JINE",
+  "version": "1.1.8",
+  "os": "win32",
+  "machineId": "44deb2a4-fda0-4e5c-820a-bdfd56e3479b",
+  "homeDir": "C:\\Users\\lk",
+  "happyHomeDir": "C:\\Users\\lk\\.happy",
+  "happyLibDir": "C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy",
+  "happyToolsDir": "C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\tools\\unpacked",
+  "startedFromDaemon": false,
+  "hostPid": 48716,
+  "startedBy": "terminal",
+  "lifecycleState": "running",
+  "lifecycleStateSince": 1778219878399,
+  "flavor": "claude",
+  "sandbox": null,
+  "dangerouslySkipPermissions": false
+}
+[13:57:58.663] [DAEMON RUN] Session webhook: cmowi7cqh2flhxd0ur4kitw90, PID: 48716, started by: terminal, hasEncryption: true 
+[13:57:58.664] [DAEMON RUN] Current tracked sessions before webhook:  
+[13:57:58.665] [DAEMON RUN] Registered externally-started session cmowi7cqh2flhxd0ur4kitw90 
+[13:57:58.730] [API] Machine 44deb2a4-fda0-4e5c-820a-bdfd56e3479b registered/updated with server 
+[13:57:58.731] [DAEMON RUN] Machine registered: 44deb2a4-fda0-4e5c-820a-bdfd56e3479b 
+[13:57:58.732] [API MACHINE] Connecting to wss://api.cluster-fluster.com 
+[13:57:58.735] [DAEMON RUN] Daemon started successfully, waiting for shutdown request 
+[13:57:59.829] [API MACHINE] Connected to server 
+[13:57:59.832] [API MACHINE] Keep-alive started (20s interval) 
+[13:58:00.213] [API MACHINE] Daemon state updated successfully 
+[13:58:00.217] [API MACHINE] Received external daemon state update 
+[13:58:23.416] [API MACHINE] Metadata updated successfully 
+[13:58:23.476] [API MACHINE] Received external metadata update 
+[13:58:58.751] [DAEMON RUN] Removing stale session with PID 48716 (process no longer exists) 
+[14:01:50.922] [CONTROL SERVER] Listing 0 sessions 
+[14:01:52.942] [CONTROL SERVER] Session started: cmowicd1vkd440r0u8lkviyvv 
+[14:01:52.943] In production, skipping message inspection 
+[14:01:52.943] [DAEMON RUN] Session reported 
+ {
+  "path": "D:\\Workspace",
+  "host": "DESKTOP-920JINE",
+  "version": "1.1.8",
+  "os": "win32",
+  "machineId": "44deb2a4-fda0-4e5c-820a-bdfd56e3479b",
+  "homeDir": "C:\\Users\\lk",
+  "happyHomeDir": "C:\\Users\\lk\\.happy",
+  "happyLibDir": "C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy",
+  "happyToolsDir": "C:\\Users\\lk\\AppData\\Roaming\\npm\\node_modules\\happy\\tools\\unpacked",
+  "startedFromDaemon": false,
+  "hostPid": 46724,
+  "startedBy": "terminal",
+  "lifecycleState": "running",
+  "lifecycleStateSince": 1778220111819,
+  "flavor": "claude",
+  "sandbox": null,
+  "dangerouslySkipPermissions": true
+}
+[14:01:52.944] [DAEMON RUN] Session webhook: cmowicd1vkd440r0u8lkviyvv, PID: 46724, started by: terminal, hasEncryption: true 
+[14:01:52.944] [DAEMON RUN] Current tracked sessions before webhook:  
+[14:01:52.946] [DAEMON RUN] Registered externally-started session cmowicd1vkd440r0u8lkviyvv 

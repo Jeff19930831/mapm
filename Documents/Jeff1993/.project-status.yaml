@@ -1,0 +1,103 @@
+# General Project Status — Single Source of Truth
+# 所有 Agent 的所有项目聚合在此
+# 各层 YAML 从本文件派生
+
+projects:
+  MAPM:
+    status: 运行中
+    archive: keep
+    owner: claude
+    type: 基础设施
+    repo: "[mapm](https://github.com/Jeff19930831/mapm)"
+    docs: "Win_Claude_Work/MAPM/"
+    code_path: "D:\\ClaudeCode\\mapm"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-27"
+
+  wechat-ai-daily:
+    status: 运行中
+    archive: keep
+    owner: claude
+    type: Python 自动化
+    repo: "[wechat-ai-daily](https://github.com/Jeff19930831/wechat-ai-daily)"
+    docs: "Win_Claude_Work/wechat-ai-daily/"
+    code_path: "D:\\ClaudeCode\\wechat-ai-daily"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-27"
+
+  procurement-charts:
+    status: 已完成
+    archive: keep
+    owner: claude
+    type: Python 数据可视化
+    repo: "[procurement-charts](https://github.com/Jeff19930831/procurement-charts)"
+    docs: "Win_Claude_Work/procurement-charts/"
+    code_path: "D:\\ClaudeCode\\procurement-charts"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-27"
+
+  wechat-chat-history:
+    status: 运行中
+    archive: keep
+    owner: claude
+    type: 数据整理
+    repo: "[wechat-chat-history](https://github.com/Jeff19930831/wechat-chat-history)"
+    docs: "Win_Claude_Work/wechat-chat-history/"
+    code_path: "D:\\ClaudeCode\\wechat-chat-history"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-27"
+
+  wechat-cli:
+    status: 维护中
+    archive: keep
+    owner: ""
+    type: CLI 工具
+    repo: 内置 Git
+    docs: "Win_Claude_Work/wechat-cli/"
+    code_path: "D:\\ClaudeCode\\wechat-cli"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-27"
+
+  wechat-decrypt:
+    status: 维护中
+    archive: keep
+    owner: ""
+    type: 解密工具
+    repo: 内置 Git
+    docs: "Win_Claude_Work/wechat-decrypt/"
+    code_path: "D:\\ClaudeCode\\wechat-decrypt"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-27"
+
+  AgenTeam:
+    status: 已归档
+    archive: archived
+    owner: claude
+    type: AI 工程编排器
+    repo: 内置 Git
+    docs: "WinCodex/AgenTeam/"
+    code_path: "C:\\Users\\lk\\Documents\\Jeff1993\\WinCodex\\AgenTeam"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-04-29"
+
+  tradingcenter:
+    status: 维护中
+    archive: keep
+    owner: claude
+    type: Python AI 策略研发平台
+    repo: "[tradingcenter](https://github.com/Jeff19930831/tradingcenter)"
+    docs: "Win_Claude_Work/tradingcenter/"
+    code_path: "D:\\ClaudeCode\\tradingcenter-restore"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-05-09"
+
+  quant-model:
+    status: 进行中
+    archive: keep
+    owner: gemini-cli
+    type: 本地量化金融模型
+    repo: "—"
+    docs: "quant-model/"
+    code_path: "C:\Users\lk\quant-qwen-finance"
+    last_handoff: "handoff.md"
+    last_update: "2026-05-11"

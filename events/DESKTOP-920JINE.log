@@ -1,0 +1,4 @@
+﻿# Events for DESKTOP-920JINE
+# Format: [ISO timestamp] [device/agent] message
+[2026-05-13T09:18:47+08:00] [DESKTOP-920JINE/codex] Started: tradingcenter Backtest real data run entry
+[2026-05-13T09:29:30+08:00] [DESKTOP-920JINE/codex] Completed: tradingcenter Backtest real market run entry; commit 76fecb8 pushed

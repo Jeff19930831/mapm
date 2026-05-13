@@ -1,0 +1,8 @@
+device: DESKTOP-920JINE
+agent: codex
+project: "tradingcenter"
+branch: "agent/codex/backtest-real-data"
+task: "Backtest real market run entry completed"
+status: done
+started: ""
+updated: "2026-05-13T09:29:30+08:00"

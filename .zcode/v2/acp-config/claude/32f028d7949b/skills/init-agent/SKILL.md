@@ -56,7 +56,8 @@ Read in order:
 Key takeaways to confirm with user:
 - Checkpoint protocol (when and how to run /checkpoint)
 - Secret policy (default deny, no payload in Git, dry-run first)
-- Document hierarchy (per-project: README → plan → progress → handoff)
+- Document hierarchy (README stable; plan Active/Next; progress/archive history; handoff Persistent/Current; runbooks recurring problems)
+- Doc Lifecycle Gate: entry docs stay short; historical reasons live in progress/archive/decisions; recurring issues live in runbooks
 
 ## Step 3: Discover Projects
 
@@ -196,7 +197,7 @@ Generate report: `~/.claude/init-agent-report-<timestamp>.md`
 
 - [ ] Review report above
 - [ ] If dry-run: re-run with `--apply` to actually install
-- [ ] Pick a project and read its handoff.md → plan.md → README.md
+- [ ] Pick a project and read handoff Persistent/Current → plan Active → README positioning/architecture/run sections
 - [ ] Run /checkpoint when work ends
 ```
 

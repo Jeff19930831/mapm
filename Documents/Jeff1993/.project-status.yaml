@@ -101,3 +101,14 @@ projects:
     code_path: "C:\Users\lk\quant-qwen-finance"
     last_handoff: "handoff.md"
     last_update: "2026-05-11"
+
+  kol-signal:
+    status: 运行中
+    archive: keep
+    owner: claude
+    type: Python 量化舆情信号源
+    repo: "[kol-signal](https://github.com/Jeff19930831/kol-signal)"
+    docs: "Win_Claude_Work/kol-signal/"
+    code_path: "D:\\ClaudeCode\\kol-signal"
+    last_handoff: "HANDOFF.md"
+    last_update: "2026-05-20"

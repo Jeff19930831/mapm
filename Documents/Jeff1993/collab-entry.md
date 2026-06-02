@@ -1,10 +1,12 @@
 # Jeff1993 协作入口（collab-entry）
 
-> 版本: v3.9 / 2026-05-22
+> 版本: v3.11 / 2026-05-29
 > 目的：所有设备、所有 Agent 接力开发的人工统一入口。根目录 `README.md` 仍是自动生成的项目 dashboard，不作为人工规则入口。
 > v3.8 改动: checkpoint 新增 Memory Hooks（Step 2.5 Recall + Step 5.7 Store），每次 checkpoint 自动与云端 agentmemory 双向同步项目状态和 secret 引用；cloud-memory 项目落地（agentmemory v0.9.21 部署在腾讯云 43.133.86.33:3111）。默认不写真实 secret payload。
 > v3.8.1 改动: con-dev 新增 Phase 2.5 Memory Recall（会话启动时搜索云端记忆）；AGENTS.md 增加记忆使用规则（三层读取：L1 冷启动/L2 周期同步/L3 即时查询）；新增 `troubleshoot:<name>` scope 用于排障记录。
 > v3.9 改动: 新增 Doc Lifecycle Gate。入口文档只回答“现在怎么接手”，历史文档回答“以前为什么这么做”，runbook 回答“常见问题怎么安全处理”；checkpoint 和所有 onboarding/skill 都必须遵守入口短、历史归档、runbook 承载常驻问题。
+> v3.10 改动: 新增项目联动协同规范。目录/schema/接口/指标/调度等契约变化必须同步上下游、contract/runbook 和验证证据。
+> v3.11 改动: 明确当前四文档以小写 `README.md` / `plan.md` / `progress.md` / `handoff.md` 为主；旧大写入口仅作兼容/历史镜像，checkpoint 前必须优先刷新小写入口。
 
 ## 0. 新 Agent 先读这 5 步
 
@@ -24,6 +26,7 @@
 - **项目同步清单**：大型项目在 `.project-status.yaml:sync` 登记需要跨设备保持可见的文档、onboarding、配置和关键源文件；不要把缓存、依赖目录、构建产物当作同步目标。
 - **长期运行知识**：功能配置方法、服务器接入、恢复步骤、secret 引用写入项目 `docs/runbooks/` 或全局 `docs/sop/`；只同步引用和步骤，不同步密钥值。
 - **Doc Lifecycle Gate**：所有项目入口文档保持短。`handoff.md` / `HANDOFF.md` 只放项目不变量、常驻问题雷达、当前目标、下一步、阻塞和索引；`plan.md` 只放 Active / Next / Archived Plans；完成记录进入 `progress/YYYY-MM.md` 或 `progress.md`；旧方案、长评审和历史 checkpoint 进入 `archive/**`。详见 `MAPM/docs/superpowers/specs/2026-05-22-doc-lifecycle-gate-design.md`。
+- **项目联动协同**：凡一个项目/模块的产物被另一方消费，目录、schema、接口、指标、调度、配置、secret 引用的变更都视为联动契约变更；必须同步检查上下游、更新 contract/runbook 并留下验证证据，不得只改生产方或消费方一端就宣称完成。
 - **云端记忆 (agentmemory)**：checkpoint 时自动与云端记忆双向同步。Step 2.5 拉取项目相关记忆为 handoff 刷新提供上下文；Step 5.7 写入项目状态和 secret 引用（`project:<name>` / `credentials:<name>` / `decision:<name>`），供跨设备/跨 session agent 搜索使用。默认不写真实 secret payload；只有认证、HTTPS、allowlist 和用户明确授权同时满足时才另行登记。服务地址：`http://43.133.86.33:3111`。
 - **规则**：Obsidian 让文件到达；Git checkpoint 记录可信状态；云端记忆让 agent 跨设备记住项目上下文。
 
@@ -78,7 +81,7 @@
 | `progress.md` | 已完成事实、验证证据、checkpoint/commit 记录 | 每次 checkpoint |
 | `handoff.md` | Persistent / Current Takeover / Index；给下一位 Agent/下一台设备的最短接力状态 | 每次 checkpoint 或中断前 |
 
-兼容期至 **2026-06-30**：旧项目的 `PROGRESS.md` / `HANDOFF.md` 继续有效；之后统一迁移为小写。
+兼容期至 **2026-06-30**：旧项目的 `PROGRESS.md` / `HANDOFF.md` 继续可读；若同目录存在小写文件，小写 `progress.md` / `handoff.md` 是当前真相源，大写只作历史镜像。
 
 ### 大项目附加层 (LOC ≥ 10K 或源文件 ≥ 20 启用)
 
@@ -98,6 +101,8 @@
 跨项目耦合（消费方、上下游、治理者-被治理者）通过 `.project-status.yaml` 的 `relations` 字段登记，使其机器可读、可被 dashboard 渲染、可被脚本反查。
 
 复杂耦合（如多接口、多次联动变更）可选地写一份 `docs/contracts/<声明方>--<对方>.md`。不是每条关系都需要契约文档——简单的"消费"关系仅 YAML 登记即可。
+
+涉及联动契约变更时，先运行 `context_gate` / `project_impact` 查影响面；复杂或重复发生的耦合必须升级为 contract，并在 producer 侧写 `[CONTRACT-CHANGE]`、consumer 侧写 `[CONTRACT-ADAPT]` 证据。
 
 详细 schema、命名规约、变更工作流见 `onboarding.md` § 13。
 
@@ -172,6 +177,7 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 - 如配置了远程仓库（`origin`），安全检查通过后必须 `git push`
 - dev-log 写入规则：先扫描当天文件是否已有同项目区块，有则合并，无则追加
 - 若本次改了配置方法、服务器接入或 secret 引用，同步更新项目 `docs/runbooks/*.md`，并在 `progress.md` 写 `[RUNBOOK]` / `[SECRET-REF]` 证据。
+- 若本次涉及联动契约变更（上游产物、下游消费、目录/schema、接口、指标、调度、配置引用），必须执行项目联动协同检查：识别上下游、更新 contract/runbook、运行最小联动验证，并在 progress/handoff 写证据。
 - 若本次让 `handoff.md`、`plan.md` 或 `README.md` 变长，先执行 Doc Lifecycle Gate：旧完成记录归入 `progress/YYYY-MM.md`，旧计划/长评审归入 `archive/**`，入口只保留摘要和链接。
 - **Memory Hooks**（v3.8）：checkpoint 前自动搜索云端记忆（Recall），checkpoint 后自动写入项目状态和 secret 引用到云端（Store），默认不写真实 secret payload。详见 `agent-kit/claude/skills/checkpoint/SKILL.md` 与本机安装副本 Step 2.5 + Step 5.7。
 
@@ -217,15 +223,15 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 | `init-agent` | 新设备 Agent 初始化 | `/init-agent` |
 
 源: [`agent-kit/claude/skills/`](agent-kit/claude/skills/)
-本机安装: `cp <src> ~/.claude/skills/<name>/SKILL.md`
+本机安装: `cp <src> ~/.agents/skills/<name>/SKILL.md`，若客户端不扫描通用目录，再回退到 `~/.claude/skills/<name>/SKILL.md`
 
 ### Codex (skills/<name>/SKILL.md)
 
 行为与 Claude 同, 通过 prompt 触发。源: [`agent-kit/codex/skills/`](agent-kit/codex/skills/)
 
-**当前 Codex 只自动识别目录式 skill**：`~/.codex/skills/<name>/SKILL.md`。根目录 `~/.codex/skills/<name>.md` 仅作源/通用 Markdown 复用, 不会出现在当前 Codex Skills 列表中。
+**当前 Codex 优先走通用目录**：`~/.agents/skills/<name>/SKILL.md`。若当前运行时不扫描通用目录，再回退到目录式 `~/.codex/skills/<name>/SKILL.md`。根目录 `~/.codex/skills/<name>.md` 仅作源/通用 Markdown 复用, 不会出现在当前 Codex Skills 列表中。
 
-本机安装: `mkdir -p ~/.codex/skills/<name> && cp <src>.md ~/.codex/skills/<name>/SKILL.md`（若源文件无 frontmatter, 安装脚本需补齐 `name` / `description`）。
+本机安装: `mkdir -p ~/.agents/skills/<name> && cp <src>.md ~/.agents/skills/<name>/SKILL.md`；若验证发现当前 Codex 不扫描通用目录，再同步到 `~/.codex/skills/<name>/SKILL.md`（若源文件无 frontmatter, 安装脚本需补齐 `name` / `description`）。
 
 清单和安装步骤见 [`agent-kit/codex/skills.md`](agent-kit/codex/skills.md)；详细约束见 [`onboarding.md § 7.1`](onboarding.md#71-codex-skill-安装格式强约束)。
 

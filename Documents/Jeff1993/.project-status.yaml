@@ -118,7 +118,7 @@ projects:
     archive: keep
     owner: codex
     type: Clash Verge 策略与节点治理
-    repo: 内置 Git
+    repo: "[clash-governance](https://github.com/Jeff19930831/clash-governance)"
     docs: "WinCodex/clash-governance/"
     code_path: "D:\\Workspace\\clash-governance"
     last_handoff: "handoff.md"

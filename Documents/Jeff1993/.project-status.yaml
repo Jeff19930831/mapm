@@ -112,3 +112,14 @@ projects:
     code_path: "D:\\ClaudeCode\\kol-signal"
     last_handoff: "HANDOFF.md"
     last_update: "2026-05-20"
+
+  clash-governance:
+    status: 运行中
+    archive: keep
+    owner: codex
+    type: Clash Verge 策略与节点治理
+    repo: 内置 Git
+    docs: "WinCodex/clash-governance/"
+    code_path: "D:\\Workspace\\clash-governance"
+    last_handoff: "handoff.md"
+    last_update: "2026-06-04"

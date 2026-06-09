@@ -1,4 +1,4 @@
----
+﻿---
 name: con-dev-onboarding-ext
 description: Extend con-dev with BOOTSTRAP-aware onboarding reads.
 ---
@@ -58,8 +58,9 @@ python3 scripts/project_registry.py sync-list <项目名> --summary
 
 ## Phase 2.5 — Memory Recall（云端记忆拉取）
 
-在 Phase 3 之前，从云端 agentmemory 搜索项目相关记忆：
+在 Phase 3 之前，从云端 agentmemory 搜索项目相关记忆。
 
+**优先 MCP tool**（`mcp__agentmemory__memory_recall`），不可用时回退 curl：
 ```bash
 curl -s -X POST http://43.133.86.33:3111/agentmemory/search \
   -H "Content-Type: application/json" \
@@ -69,7 +70,7 @@ curl -s -X POST http://43.133.86.33:3111/agentmemory/search \
 **处理规则**：
 - 搜索结果中的关键事实（最近状态变更、重要决策、凭证引用位置）纳入就绪报告
 - 凭证类记忆（scope 含 credentials）只展示凭证位置、权限范围、恢复方式和 runbook 链接；不得展示真实密码/token
-- 服务不可达 → 不阻断，在报告中注明
+- MCP 和 curl 均不可达 → 不阻断，在报告中注明
 - 与 handoff 矛盾时以 handoff 为准
 
 ## 与 Claude 版本的差异

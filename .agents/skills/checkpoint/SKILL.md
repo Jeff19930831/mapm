@@ -71,16 +71,31 @@ grep -r "=======" . --include="*.md" --include="*.py" 2>/dev/null | head -5
 
 **API 地址**: `http://43.133.86.33:3111`（即 `cloud-memory` 项目的 agentmemory 服务）
 
+**搜索策略：多查询并行**（单一泛查询容易因词频分散导致向量匹配失败，必须发 2-3 次聚焦查询）：
+
 ```bash
+# Query 1 — 精确项目名 + 最近动作
 curl -s -X POST http://43.133.86.33:3111/agentmemory/search \
   -H "Content-Type: application/json" \
-  -d '{"query":"<project-name> status goal blocker","limit":5}'
+  -d '{"query":"<project-name> checkpoint deploy","limit":5}'
+
+# Query 2 — 项目名 + 阻塞/决策
+curl -s -X POST http://43.133.86.33:3111/agentmemory/search \
+  -H "Content-Type: application/json" \
+  -d '{"query":"<project-name> blocker decision","limit":3}'
 ```
 
+**搜索 query 编写原则**：
+1. 精确项目名必须出现（核心锚点）
+2. 第二个词选高频动作词：checkpoint / deploy / bugfix / blocker / decision
+3. 每次 2-3 个词，不超过 4 个（词越多向量越分散匹配越差）
+4. 多次查询结果合并去重
+
 **处理规则**:
-- 搜索结果中的关键事实（项目状态、目标变更、偏好）纳入 handoff.md 刷新的参考输入。
-- 若搜索返回空或服务不可达 → 不阻断 checkpoint，仅记录 "memory recall: no results / service unreachable"。
-- 不在 handoff 中逐条引用 memory，只吸收有价值的信息作为上下文。
+- 多次查询结果合并去重（按 memory ID），按 `createdAt` 倒序取前 5 条
+- 搜索结果中的关键事实（项目状态、目标变更、偏好）纳入 handoff.md 刷新的参考输入
+- 若所有查询均返回空或服务不可达 → 不阻断 checkpoint，仅记录 "memory recall: no results / service unreachable"
+- 不在 handoff 中逐条引用 memory，只吸收有价值的信息作为上下文
 
 ### Step 3: 文档解析（resolver）
 
@@ -250,10 +265,12 @@ curl -s -X POST http://43.133.86.33:3111/agentmemory/remember \
 git ls-files | grep -iE '(^|[/._-])(\.env|secret|secrets|token|tokens|password|passwd|credential|credentials|auth|api[_-]?key|private[_-]?key|key)([/._-]|$)|\.(key|pem|p12)$|config\.json$' | grep -v -iE "(README|example|template|test|mock|fixture|allowlist|policy|policies|payload-policy|reference)"
 ```
 
+> **用户策略 (2026-06-03)**: 私有仓库允许明文 secret payload 进入 Git。secret gate 降级为**警告**, 仅列清单, **不阻断** checkpoint/push。
+
 命中候选 secret payload 时:
-- 若路径精确匹配 `agent-kit/secrets/allowlist.yaml` 中 `classification: tracked-exception` 且 `risk_acceptance: user-approved` 的条目 → 允许继续, 但报告只写路径和 "tracked exception approved", 不读取/打印内容。
-- 否则 **停止 checkpoint**，提示 remove-from-index / 轮换。
-- 若命中的是 policy / allowlist / secret-reference 文档, 必须人工确认它不含真实值后才允许继续。
+- 打印命中清单 + `WARN: 以下 secret 将进入私有 Git 仓 (已授权, 知情确认)`, **继续 checkpoint, 不停止**。
+- 列清单是为防止无意识提交临时 token / debug 文件; 看到清单后若发现误入, 可 `git rm --cached <path>` 撤回。
+- `no_log_values` 仍生效: 只打印命中**路径**, 不打印 secret **值**, 避免日志/记忆二次扩散。
 
 同时扫描新增文件内容：
 ```bash
@@ -385,7 +402,7 @@ fi
 ```
 
 **安全约束**:
-- 若 secret gate (Step 6) FAIL → 跳过 Step 7.5, 强制阻断
+- secret gate (Step 6) 仅警告, **不阻断 push** (2026-06-03 用户策略: 私有仓允许 payload)
 - 若 push 因 non-fast-forward 失败 → 不强 push, 提示用户手动 pull --rebase
 - 不在主分支以外的分支自动 push (除非用户显式 --allow-non-main)
 

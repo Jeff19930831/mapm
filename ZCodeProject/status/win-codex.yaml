@@ -1,8 +1,8 @@
 ﻿device: win-codex
 agent: codex
-project: "ZCodeProject"
+project: "zcode-governance"
 branch: "master"
 task: ""
-status: idle
+status: done
 started: ""
-updated: "2026-06-09T13:27:48.0070766+08:00"
+updated: "2026-06-09T13:35:55.1252465+08:00"

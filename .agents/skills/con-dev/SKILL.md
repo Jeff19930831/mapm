@@ -52,12 +52,22 @@ python3 scripts/project_registry.py sync-list <项目名> --summary
 
 | repo | code_path | 动作 |
 |---|---|---|
-| GitHub URL | 存在 | 跳过 |
+| GitHub URL | 存在 | `cd <code_path> && git pull`；冲突 → 提示处理，**停止** |
 | GitHub URL | 不存在 | `git clone <url> <code_path>` |
 | GitHub URL | 当前设备无 code_path | 先根据 `repo` + 项目名给出建议路径，必要时 clone 到 `~/projects/<repo>` 或用户约定路径，并在 checkpoint 时补 `code_paths` |
 | `—` 或空 | 任意 | 纯文档，跳过 |
 | `内置 Git` | 存在 | 已就绪 |
 | `内置 Git` | 不存在 | 提示手动同步，继续 |
+
+**`code_path` 已存在时的同步规则**：
+
+```bash
+cd <code_path> && git status && git pull
+```
+
+- 有未提交改动 → 提示 stash 或 commit，**停止**
+- 合并冲突 → 提示解决，**停止**
+- pull 成功 → 记录变更摘要（`git log --oneline -5`），供 Phase 5 报告
 
 若项目条目有 `sync`，Phase 5 报告中列出同步清单摘要；大型项目接力优先确认 `required` 文件齐全。
 若 `sync` 包含 `docs/runbooks/**/*.md` 或脱敏示例配置，Phase 5 报告中列出 runbook / example config 数量；但默认不读取 runbook 正文，除非 handoff / BOOTSTRAP / plan Active 明确指向。
@@ -66,15 +76,43 @@ python3 scripts/project_registry.py sync-list <项目名> --summary
 
 从云端 agentmemory 搜索项目相关记忆，为后续读取提供跨设备上下文。
 
+### 搜索策略：多查询并行（必做）
+
+**问题**：单一泛查询（如 `"项目名 status decision credentials blocker"`）因词频分散、核心概念不突出，容易向量匹配失败返回空。
+
+**解决方案**：发 **3 次独立查询**，每次聚焦一个维度，合并去重：
+
+```
+Query 1 — 精确项目名 + 最近动作：
+  mcp__agentmemory__memory_recall: query="<项目名> checkpoint deploy", limit=5
+
+Query 2 — 项目名 + 阻塞/决策：
+  mcp__agentmemory__memory_recall: query="<项目名> blocker decision", limit=3
+
+Query 3 — 项目名 + 凭证位置（不输出真实密码）：
+  mcp__agentmemory__memory_recall: query="<项目名> credentials server", limit=3
+```
+
+**优先使用 MCP tool**（`agentmemory_memory_recall`），MCP 不可用时回退 curl：
+
 ```bash
 curl -s -X POST http://43.133.86.33:3111/agentmemory/search \
   -H "Content-Type: application/json" \
-  -d '{"query":"<项目名> status decision credentials blocker","limit":5}'
+  -d '{"query":"<项目名> checkpoint deploy","limit":5}'
 ```
 
-**处理规则**：
+### 搜索 query 编写原则
+
+1. **精确项目名必须出现**（核心锚点）
+2. **第二个词选高频动作词**：checkpoint / deploy / bugfix / blocker / decision（而非 status/blocker/credentials 这类泛词堆叠）
+3. **每次查询 2-3 个词**，不要超过 4 个（词越多，向量越分散，匹配越差）
+4. **宁可多发几次查询**，不要把所有维度塞进一个 query
+
+### 处理规则
+
+- 3 次查询结果合并去重（按 memory ID），按 `createdAt` 倒序取前 5 条
 - 搜索结果中的关键事实（最近状态变更、重要决策、凭证引用位置）纳入 Phase 5 就绪报告的参考输入
-- 若搜索返回空或服务不可达 → 不阻断 con-dev，在报告中注明 "cloud memory: no results / unreachable"
+- 若 3 次查询全部无结果 → 用 `agentmemory_memory_export` 做一次全量检查确认服务是否正常；服务异常时在报告中注明 "cloud memory: no results / unreachable"，不阻断 con-dev
 - 凭证类记忆（scope 含 `credentials`）只展示凭证位置、权限范围、恢复方式和 runbook 链接；不得展示真实密码/token
 - 不在报告中逐条引用 memory，只吸收有价值的信息作为上下文补充
 

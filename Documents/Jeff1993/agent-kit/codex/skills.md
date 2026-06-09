@@ -55,6 +55,13 @@ description: "<一句话说明触发场景和作用>"
 
 验证方式：重启 Codex 后，确认会话启动提示的 Skills 列表中出现对应 skill 名称；若未出现，使用 fallback 目录 `~/.codex/skills` 后再重启验证。
 
+## 与 Claude skills 的分工
+
+Codex 使用 `-onboarding-ext` 扩展模式：Claude 有完整 `checkpoint`/`con-dev`/`init-agent`；Codex 只有追加 onboarding 逻辑的 `*-onboarding-ext` 伴生 skill。这是有意的——两个 Agent 有不同的工具链和插件生态。
+
+- `init-agent` 仅限 Claude：它安装 Claude 专用插件和 MCP 服务器，Codex 用 `AGENTS.md` + `collab-entry.md` 作为自己的初始化路径。
+- `checkpoint-onboarding-ext` / `con-dev-onboarding-ext` 是轻量 delta，不重复 Claude 完整 skill 的全部逻辑。
+
 ## AGENTS.md 注入 (大项目根目录)
 
 在大项目根 `AGENTS.md` 末尾追加:

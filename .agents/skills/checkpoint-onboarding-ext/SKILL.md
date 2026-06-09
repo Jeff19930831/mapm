@@ -1,4 +1,4 @@
----
+﻿---
 name: checkpoint-onboarding-ext
 description: Extend checkpoint with onboarding and Doc Lifecycle Gate checks.
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 name: init-agent
 description: "Initialize a new Claude Agent or device into the Jeff1993 collaboration system. Use this skill whenever the user says 'init agent', 'onboard', 'new device setup', 'setup this machine', 'agent onboarding', or when a new Agent session starts and needs to confirm identity, read rules, and sync project-approved skills/plugins. Also use when the user wants to install the everything-claude-code plugin or add its marketplace."
 argument-hint: "[--dry-run|--apply]"
@@ -276,4 +276,3 @@ Show user the report path and key findings.
 - For bash checks: `uname -s` in Git Bash returns `MINGW64_NT` or similar
 - Home dir: `$HOME` works in Git Bash, `%USERPROFILE%` in cmd/PowerShell
 </notes>
-

@@ -1,12 +1,14 @@
 # Jeff1993 协作入口（collab-entry）
 
-> 版本: v3.11 / 2026-05-29
+> 版本: v3.13 / 2026-06-05
 > 目的：所有设备、所有 Agent 接力开发的人工统一入口。根目录 `README.md` 仍是自动生成的项目 dashboard，不作为人工规则入口。
 > v3.8 改动: checkpoint 新增 Memory Hooks（Step 2.5 Recall + Step 5.7 Store），每次 checkpoint 自动与云端 agentmemory 双向同步项目状态和 secret 引用；cloud-memory 项目落地（agentmemory v0.9.21 部署在腾讯云 43.133.86.33:3111）。默认不写真实 secret payload。
 > v3.8.1 改动: con-dev 新增 Phase 2.5 Memory Recall（会话启动时搜索云端记忆）；AGENTS.md 增加记忆使用规则（三层读取：L1 冷启动/L2 周期同步/L3 即时查询）；新增 `troubleshoot:<name>` scope 用于排障记录。
-> v3.9 改动: 新增 Doc Lifecycle Gate。入口文档只回答“现在怎么接手”，历史文档回答“以前为什么这么做”，runbook 回答“常见问题怎么安全处理”；checkpoint 和所有 onboarding/skill 都必须遵守入口短、历史归档、runbook 承载常驻问题。
+> v3.9 改动: 新增 Doc Lifecycle Gate。入口文档只回答”现在怎么接手”，历史文档回答”以前为什么这么做”，runbook 回答”常见问题怎么安全处理”；checkpoint 和所有 onboarding/skill 都必须遵守入口短、历史归档、runbook 承载常驻问题。
 > v3.10 改动: 新增项目联动协同规范。目录/schema/接口/指标/调度等契约变化必须同步上下游、contract/runbook 和验证证据。
 > v3.11 改动: 明确当前四文档以小写 `README.md` / `plan.md` / `progress.md` / `handoff.md` 为主；旧大写入口仅作兼容/历史镜像，checkpoint 前必须优先刷新小写入口。
+> v3.12 改动: agent-kit 同步工具落地（`scripts/agent_kit_sync.py`，manifest `skill_sync` 驱动，4 目标目录）；`Skill/` 废弃为指针；`项目规范.md` 归档，独特内容迁移到 `docs/sop/`；§ 7 新增 § 7.0 同步工具；skill 表增加 `deep-search` / `session-handoff`；con-dev Memory Recall 增加 MCP 优先。
+> v3.13 改动: § 1 补齐云端记忆基础常识（单一共享云端不分设备/版本铁律 agentmemory↔iii-sdk↔iii引擎/NSSM 服务恢复）与基础设施网络访问坑（Clash 全局 TUN 走不稳定节点 → DIRECT 规则 + SSH 连接复用）；新增 `docs/sop/cloud-memory-and-network.md` 故障手册；落点项目 `cloud-memory` / `clash-governance`。
 
 ## 0. 新 Agent 先读这 5 步
 
@@ -28,6 +30,10 @@
 - **Doc Lifecycle Gate**：所有项目入口文档保持短。`handoff.md` / `HANDOFF.md` 只放项目不变量、常驻问题雷达、当前目标、下一步、阻塞和索引；`plan.md` 只放 Active / Next / Archived Plans；完成记录进入 `progress/YYYY-MM.md` 或 `progress.md`；旧方案、长评审和历史 checkpoint 进入 `archive/**`。详见 `MAPM/docs/superpowers/specs/2026-05-22-doc-lifecycle-gate-design.md`。
 - **项目联动协同**：凡一个项目/模块的产物被另一方消费，目录、schema、接口、指标、调度、配置、secret 引用的变更都视为联动契约变更；必须同步检查上下游、更新 contract/runbook 并留下验证证据，不得只改生产方或消费方一端就宣称完成。
 - **云端记忆 (agentmemory)**：checkpoint 时自动与云端记忆双向同步。Step 2.5 拉取项目相关记忆为 handoff 刷新提供上下文；Step 5.7 写入项目状态和 secret 引用（`project:<name>` / `credentials:<name>` / `decision:<name>`），供跨设备/跨 session agent 搜索使用。默认不写真实 secret payload；只有认证、HTTPS、allowlist 和用户明确授权同时满足时才另行登记。服务地址：`http://43.133.86.33:3111`。
+  - **单一共享云端，不分设备/不分 agent**：某设备搜不到别的设备写的记忆 = 该设备配置错了（多半在写本地），不是"按设备隔离"。验证 `curl …/livez`；端点用 `livez`/`search`/`remember`（`status`/`memories` 不可用）；关键词 search 有几分钟索引延迟（非故障）。
+  - **版本铁律**：服务器 `agentmemory ↔ iii-sdk ↔ iii 引擎` 必须配套；iii 引擎默认后台自动更新，自升到不兼容版本会让 `/agentmemory/*` 全 404、所有设备退回本地。
+  - 故障"全设备记忆互不可见" / 服务恢复（NSSM 服务 `iii-engine`+`agentmemory-worker`）→ 见 [`docs/sop/cloud-memory-and-network.md`](docs/sop/cloud-memory-and-network.md) 与 `cloud-memory/` 项目。
+- **基础设施网络访问（Clash/VPN）**：到自有服务器 IP（如 agentmemory `43.133.86.33`）若被全局 TUN 代理走不稳定节点，会出现 SSH 卡死 / HTTP 抖动。持久解：Clash 加 `IP-CIDR,<ip>/32,DIRECT`（见 `clash-governance`）；SSH 用连接复用+保活（`~/.ssh/config` ControlMaster）。详见 [`docs/sop/cloud-memory-and-network.md`](docs/sop/cloud-memory-and-network.md) § 5。
 - **规则**：Obsidian 让文件到达；Git checkpoint 记录可信状态；云端记忆让 agent 跨设备记住项目上下文。
 
 ## 2. 文档地图
@@ -40,11 +46,11 @@
 | `onboarding-compact.md` | 精简入口（~1.4KB），每次对话自动加载 |
 | `onboarding.md` | 完整版 Agent 规则（按需读取，非自动加载） |
 | `README.md` | 自动生成的 General dashboard；不要在 AUTO 区手写规则 |
-| `项目规范.md` | 长版规范；应指向本入口和四文档模型 |
+| `项目规范.md` | 已归档（降级为索引指针）；权威规范见 `onboarding.md` |
 | `项目总览.md` | 项目总览文档 |
 | `定时任务总览.md` | 全局定时任务汇总 |
 | `agent-kit/` | skills / prompts / configs / secrets / bootstrap 的同步合同 |
-| `Skill/` | Agent 技能定义（`checkpoint.md`、`deep-search.md` 等）|
+| `Skill/` | 已废弃，指针目录 → `agent-kit/claude/skills/` |
 | `agent-kit/claude/skills/` | Claude Code skill 跨设备同步目录（`con-dev`、`checkpoint` 等）|
 | `dev-log/` | 每日全局开发日志（`YYYY-MM-DD.md`），位于 Jeff1993 根目录 |
 | `MAPM/` | 项目规范治理主项目；维护 collab-entry、onboarding、agent-kit、通用 skill 和治理脚本的规则边界 |
@@ -170,7 +176,7 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 
 ## 5. Checkpoint 协议入口
 
-详见 [`onboarding.md § 6`](onboarding.md#6-checkpoint-规则) 和 [`Skill/checkpoint.md`](Skill/checkpoint.md)。
+详见 [`onboarding.md § 6`](onboarding.md#6-checkpoint-规则) 和 [`agent-kit/claude/skills/checkpoint/SKILL.md`](agent-kit/claude/skills/checkpoint/SKILL.md)。
 
 **要点**：
 - 默认 commit 前缀：`[CHECKPOINT] YYYY-MM-DD <项目名>: <摘要>`
@@ -189,7 +195,7 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 
 详见 [`onboarding.md § 8`](onboarding.md#8-secret-同步风险确认)。
 
-核心边界：secret payload 不得进入 Git；`git ls-files` 命中即中止 checkpoint。可同步 secret 名称、用途、存放位置和恢复步骤，不同步值。
+核心边界（2026-06-03 放宽）：私有仓允许明文 secret payload 进入 Git；`git ls-files` 命中仅**警告列清单**，不中止 checkpoint。`no_log_values` 仍生效（不打印值）。
 
 ## 7. 冲突恢复
 
@@ -221,9 +227,12 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 | `adr` | 起草决策记录 | `/adr [<slug>]` |
 | `refresh-onboarding` | 中途轻量刷新 | `/refresh-onboarding` |
 | `init-agent` | 新设备 Agent 初始化 | `/init-agent` |
+| `deep-search` | 多源深度搜索 | `/deep-search <topic>` |
+| `session-handoff` | 同设备 session 续接 | "切 session 继续" |
 
 源: [`agent-kit/claude/skills/`](agent-kit/claude/skills/)
-本机安装: `cp <src> ~/.agents/skills/<name>/SKILL.md`，若客户端不扫描通用目录，再回退到 `~/.claude/skills/<name>/SKILL.md`
+同步工具: `python3 scripts/agent_kit_sync.py --apply`（manifest 驱动，跨平台，部署到 4 目标目录）
+手动安装: `cp <src> ~/.agents/skills/<name>/SKILL.md`，若客户端不扫描通用目录，再回退到 `~/.claude/skills/<name>/SKILL.md`
 
 ### Codex (skills/<name>/SKILL.md)
 

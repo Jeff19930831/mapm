@@ -123,3 +123,14 @@ projects:
     code_path: "D:\\Workspace\\clash-governance"
     last_handoff: "handoff.md"
     last_update: "2026-06-05"
+
+  zcode-governance:
+    status: 运行中
+    archive: keep
+    owner: codex
+    type: ZCode 配置与本机治理
+    repo: 内置 Git
+    docs: "zcode-governance/"
+    code_path: "C:\\Users\\lk\\ZCodeProject"
+    last_handoff: "handoff.md"
+    last_update: "2026-06-09"

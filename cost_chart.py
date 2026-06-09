@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-import numpy as np
 
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei']

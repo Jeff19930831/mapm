@@ -1,4 +1,4 @@
-﻿# Events for DESKTOP-920JINE
+# Events for DESKTOP-920JINE
 # Format: [ISO timestamp] [device/agent] message
 [2026-05-13T09:18:47+08:00] [DESKTOP-920JINE/codex] Started: tradingcenter Backtest real data run entry
 [2026-05-13T09:29:30+08:00] [DESKTOP-920JINE/codex] Completed: tradingcenter Backtest real market run entry; commit 76fecb8 pushed
@@ -6,3 +6,5 @@
 [2026-05-13T09:45:26+08:00] [DESKTOP-920JINE/codex] Completed: tradingcenter Backtest strategy repository integration tasks 1-3; pushed through 28a1bd3
 [2026-05-13T09:56:14+08:00] [DESKTOP-920JINE/codex] Completed: tradingcenter Backtest strategy repository integration tasks 4-6; pushed dcfd3a9
 [2026-05-13T10:10:24.7515500+08:00] [DESKTOP-920JINE/codex] Continued checkpoint for tradingcenter after user approved keeping private-repo API literals; secret gate exception accepted
+[2026-06-09T15:54:50+08:00] [DESKTOP-920JINE/codex] Started task: Fix all warnings
+[2026-06-09T16:07:31+08:00] [DESKTOP-920JINE/codex] Completed: Fix all warnings; ruff clean, Python compile clean, shell syntax clean

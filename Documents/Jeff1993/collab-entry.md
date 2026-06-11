@@ -1,6 +1,6 @@
 # Jeff1993 协作入口（collab-entry）
 
-> 版本: v3.13 / 2026-06-05
+> 版本: v3.14 / 2026-06-11
 > 目的：所有设备、所有 Agent 接力开发的人工统一入口。根目录 `README.md` 仍是自动生成的项目 dashboard，不作为人工规则入口。
 > v3.8 改动: checkpoint 新增 Memory Hooks（Step 2.5 Recall + Step 5.7 Store），每次 checkpoint 自动与云端 agentmemory 双向同步项目状态和 secret 引用；cloud-memory 项目落地（agentmemory v0.9.21 部署在腾讯云 43.133.86.33:3111）。默认不写真实 secret payload。
 > v3.8.1 改动: con-dev 新增 Phase 2.5 Memory Recall（会话启动时搜索云端记忆）；AGENTS.md 增加记忆使用规则（三层读取：L1 冷启动/L2 周期同步/L3 即时查询）；新增 `troubleshoot:<name>` scope 用于排障记录。
@@ -9,6 +9,7 @@
 > v3.11 改动: 明确当前四文档以小写 `README.md` / `plan.md` / `progress.md` / `handoff.md` 为主；旧大写入口仅作兼容/历史镜像，checkpoint 前必须优先刷新小写入口。
 > v3.12 改动: agent-kit 同步工具落地（`scripts/agent_kit_sync.py`，manifest `skill_sync` 驱动，4 目标目录）；`Skill/` 废弃为指针；`项目规范.md` 归档，独特内容迁移到 `docs/sop/`；§ 7 新增 § 7.0 同步工具；skill 表增加 `deep-search` / `session-handoff`；con-dev Memory Recall 增加 MCP 优先。
 > v3.13 改动: § 1 补齐云端记忆基础常识（单一共享云端不分设备/版本铁律 agentmemory↔iii-sdk↔iii引擎/NSSM 服务恢复）与基础设施网络访问坑（Clash 全局 TUN 走不稳定节点 → DIRECT 规则 + SSH 连接复用）；新增 `docs/sop/cloud-memory-and-network.md` 故障手册；落点项目 `cloud-memory` / `clash-governance`。
+> v3.14 改动: 重划 `checkpoint` / `con-dev` / `session-handoff` 三层接力边界；引入 CodeGraph 作为本地开发雷达，`docs/onboarding/CODEMAP.md` 继续作为可提交交接地图；checkpoint 默认本地收口，不自动 push/deploy，publish 需显式授权。
 
 ## 0. 新 Agent 先读这 5 步
 
@@ -26,6 +27,7 @@
 - **Git / GitHub**（`jeff1993-docs`）：负责 checkpoint、版本历史、回滚和跨设备冲突处理。
 - **代码仓库**：每个项目独立 Git 仓库；本地地址登记在 `.project-status.yaml` 的 `code_paths`（多设备）或旧 `code_path`（兼容）里，新设备按 § 4 解析后再 `git clone`。
 - **项目同步清单**：大型项目在 `.project-status.yaml:sync` 登记需要跨设备保持可见的文档、onboarding、配置和关键源文件；不要把缓存、依赖目录、构建产物当作同步目标。
+- **本地 CodeGraph / durable CODEMAP 分工**：CodeGraph 是本地开发雷达，用于查询 symbol/call graph/影响面，索引目录 `.codegraph/` 不入 Git；`docs/onboarding/CODEMAP.md` 是可提交交接地图，由 `scripts/refresh_codemap.py` 生成并由 `check_onboarding.py` 质检。开发查调用链优先 CodeGraph；跨设备交接和 checkpoint 仍以 CODEMAP/onboarding 文档为准。
 - **长期运行知识**：功能配置方法、服务器接入、恢复步骤、secret 引用写入项目 `docs/runbooks/` 或全局 `docs/sop/`；只同步引用和步骤，不同步密钥值。
 - **Doc Lifecycle Gate**：所有项目入口文档保持短。`handoff.md` / `HANDOFF.md` 只放项目不变量、常驻问题雷达、当前目标、下一步、阻塞和索引；`plan.md` 只放 Active / Next / Archived Plans；完成记录进入 `progress/YYYY-MM.md` 或 `progress.md`；旧方案、长评审和历史 checkpoint 进入 `archive/**`。详见 `MAPM/docs/superpowers/specs/2026-05-22-doc-lifecycle-gate-design.md`。
 - **项目联动协同**：凡一个项目/模块的产物被另一方消费，目录、schema、接口、指标、调度、配置、secret 引用的变更都视为联动契约变更；必须同步检查上下游、更新 contract/runbook 并留下验证证据，不得只改生产方或消费方一端就宣称完成。
@@ -77,6 +79,7 @@
 | `agent-kit/secrets/allowlist.yaml` | secret payload 私有路径 allowlist（只放路径和用途）| 用户明确 opt-in 同步 secret payload 时 |
 | `<project>/progress/YYYY-MM.md` | 月度完成记录、旧 handoff 完成批次、验证证据 | 入口文档出现历史堆积时 |
 | `<project>/archive/**` | 旧方案、长评审、历史 checkpoint、退役计划 | 历史仍需追溯但不应进入冷启动上下文时 |
+| `<project>/.codegraph/` | CodeGraph 本地索引和查询缓存 | 本地开发辅助；必须忽略，不作为 checkpoint payload |
 
 ### 每项目四文档 (基线, 所有项目)
 
@@ -163,9 +166,9 @@
 /con-dev +<项目名>
 ```
 
-skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_paths` / `sync`）→ clone 代码仓库 → **精准读取** handoff/plan → 环境检测 → 输出就绪报告。
+skill 会完成冷启动接手：安全同步 Jeff1993/代码仓 → 解析 YAML（含 `code_paths` / `sync`）→ 精准读取 handoff/plan/BOOTSTRAP → 可选准备本地 CodeGraph → 环境检测 → 输出就绪报告。`con-dev` 不 checkpoint、不 commit、不 push、不重写 durable docs。
 
-**con-dev 上下文优化**（v3.3）：skill 采用精准读取策略，只加载冷启动必需内容，不读参考/历史数据。详见 § 9 skill 说明。
+**con-dev 上下文优化**（v3.14）：skill 采用精准读取策略，只加载冷启动必需内容；CodeGraph 只做本地索引准备和即时结构查询，不替代 handoff/BOOTSTRAP/CODEMAP。
 
 **手动快速路径（无 skill 时）：**
 1. 确认 Jeff1993 已通过 Obsidian Sync 同步到新设备，然后 `git pull`
@@ -179,13 +182,23 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 详见 [`onboarding.md § 6`](onboarding.md#6-checkpoint-规则) 和 [`agent-kit/claude/skills/checkpoint/SKILL.md`](agent-kit/claude/skills/checkpoint/SKILL.md)。
 
 **要点**：
-- 默认 commit 前缀：`[CHECKPOINT] YYYY-MM-DD <项目名>: <摘要>`
-- 如配置了远程仓库（`origin`），安全检查通过后必须 `git push`
+- 默认是本地 durable closeout：验证、文档归档、onboarding 自检、safe memory、secret path check、可追踪 commit。
+- 默认 commit 前缀：`[CHECKPOINT] <项目名>: <摘要>`（日期可按项目习惯加入）。
+- `git push` / cloud deploy / production touch 属于 publish 行为，必须有本轮明确授权或项目策略允许；checkpoint 默认不自动 push/deploy。
 - dev-log 写入规则：先扫描当天文件是否已有同项目区块，有则合并，无则追加
 - 若本次改了配置方法、服务器接入或 secret 引用，同步更新项目 `docs/runbooks/*.md`，并在 `progress.md` 写 `[RUNBOOK]` / `[SECRET-REF]` 证据。
 - 若本次涉及联动契约变更（上游产物、下游消费、目录/schema、接口、指标、调度、配置引用），必须执行项目联动协同检查：识别上下游、更新 contract/runbook、运行最小联动验证，并在 progress/handoff 写证据。
 - 若本次让 `handoff.md`、`plan.md` 或 `README.md` 变长，先执行 Doc Lifecycle Gate：旧完成记录归入 `progress/YYYY-MM.md`，旧计划/长评审归入 `archive/**`，入口只保留摘要和链接。
+- 大项目 checkpoint 刷新 `docs/onboarding/CODEMAP.md` 并跑 `check_onboarding.py`；CodeGraph 只用于本地影响面复核，`.codegraph/` 不提交。
 - **Memory Hooks**（v3.8）：checkpoint 前自动搜索云端记忆（Recall），checkpoint 后自动写入项目状态和 secret 引用到云端（Store），默认不写真实 secret payload。详见 `agent-kit/claude/skills/checkpoint/SKILL.md` 与本机安装副本 Step 2.5 + Step 5.7。
+
+### 5.1 三种接力流程边界
+
+| 流程 | 用途 | 读写边界 | CodeGraph / CODEMAP |
+|---|---|---|---|
+| `session-handoff` | 同设备切 session 的短续接包 | 默认只读 handoff/plan/git 摘要；不查注册表/云记忆，不 commit/push | 不初始化 CodeGraph；不刷新 CODEMAP |
+| `con-dev` | 新设备或冷启动接手老项目 | 安全同步、解析路径、读 takeover 文档、环境检测；不改 durable docs | 可初始化本地 CodeGraph；只 grep CODEMAP |
+| `checkpoint` | 收工并留下可提交可信状态 | 验证、归档、刷新 handoff/progress/onboarding、safe memory、commit；push/deploy 需授权 | 可用 CodeGraph 做影响面复核；必须刷新 durable CODEMAP |
 
 ### dev-log 归档策略
 
@@ -222,13 +235,13 @@ skill 会自动完成全部五阶段：`git pull` → 解析 YAML（含 `code_pa
 | skill | 作用 | 触发 |
 |---|---|---|
 | `con-dev` | 跨设备/新会话接力（精准读取，省 ~9K tokens） | `/con-dev +<项目>` |
-| `checkpoint` | 收工 (含 onboarding 自检) | `/checkpoint` |
+| `checkpoint` | 本地 durable 收口（验证、文档、commit；publish 需授权） | `/checkpoint` |
 | `init-onboarding` | 一次性接入大型附加层 | `/init-onboarding [--small\|--large\|--upgrade]` |
 | `adr` | 起草决策记录 | `/adr [<slug>]` |
 | `refresh-onboarding` | 中途轻量刷新 | `/refresh-onboarding` |
 | `init-agent` | 新设备 Agent 初始化 | `/init-agent` |
 | `deep-search` | 多源深度搜索 | `/deep-search <topic>` |
-| `session-handoff` | 同设备 session 续接 | "切 session 继续" |
+| `session-handoff` | 同设备 session 轻量续接包 | "切 session 继续" |
 
 源: [`agent-kit/claude/skills/`](agent-kit/claude/skills/)
 同步工具: `python3 scripts/agent_kit_sync.py --apply`（manifest 驱动，跨平台，部署到 4 目标目录）

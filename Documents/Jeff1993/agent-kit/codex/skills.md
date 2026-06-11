@@ -16,6 +16,8 @@
 - 兼容旧项目 PROGRESS.md / HANDOFF.md
 - 大项目附加层 (LOC ≥ 10K 或源文件 ≥ 20)：启用 `docs/onboarding/`
 - Doc Lifecycle Gate：handoff/BOOTSTRAP 只回答"现在怎么接手"；历史写 `progress/YYYY-MM.md` / `archive/**` / `decisions/**`；重复问题写 `docs/runbooks/**`
+- CodeGraph 是本地开发雷达（`.codegraph/` 不入 Git）；CODEMAP 是 durable onboarding 地图，checkpoint/refresh-onboarding 刷新。
+- 三流程边界：`session-handoff` 同机短续接；`con-dev` 冷启动接手；`checkpoint` durable 收口与 commit，push/deploy 需授权。
 
 ## Skills 清单 (skills/ 源文件 → 安装为目录式)
 
@@ -29,6 +31,8 @@
 | `checkpoint-onboarding-ext.md` | `~/.agents/skills/checkpoint-onboarding-ext/SKILL.md` | `~/.codex/skills/checkpoint-onboarding-ext/SKILL.md` | checkpoint 时追加 onboarding 自检 | (随 checkpoint 自动触发) |
 | `con-dev-onboarding-ext.md` | `~/.agents/skills/con-dev-onboarding-ext/SKILL.md` | `~/.codex/skills/con-dev-onboarding-ext/SKILL.md` | con-dev 时优先读 BOOTSTRAP.md | (随 con-dev 自动触发) |
 | `session-handoff.md` | `~/.agents/skills/session-handoff/SKILL.md` | `~/.codex/skills/session-handoff/SKILL.md` | 同设备切 session 的轻量续接 | "切 session 继续" / "同设备接手" / "轻量续接" |
+
+> 若 Codex 会话已能扫描 `agent-kit/claude/skills/*` 同步出的完整 `checkpoint` / `con-dev` / `session-handoff`，优先使用完整 skill；`*-onboarding-ext` 保留为旧 Codex/通用 prompt 的轻量扩展源。
 
 ## 安装步骤
 
@@ -57,10 +61,10 @@ description: "<一句话说明触发场景和作用>"
 
 ## 与 Claude skills 的分工
 
-Codex 使用 `-onboarding-ext` 扩展模式：Claude 有完整 `checkpoint`/`con-dev`/`init-agent`；Codex 只有追加 onboarding 逻辑的 `*-onboarding-ext` 伴生 skill。这是有意的——两个 Agent 有不同的工具链和插件生态。
+Claude 源目录仍是完整治理 skill 的 canonical source。Codex 若能读取通用目录，也可直接使用完整 `checkpoint` / `con-dev` / `session-handoff`；若运行时只支持项目 prompt 或轻量注入，则使用 `-onboarding-ext` 扩展模式。
 
 - `init-agent` 仅限 Claude：它安装 Claude 专用插件和 MCP 服务器，Codex 用 `AGENTS.md` + `collab-entry.md` 作为自己的初始化路径。
-- `checkpoint-onboarding-ext` / `con-dev-onboarding-ext` 是轻量 delta，不重复 Claude 完整 skill 的全部逻辑。
+- `checkpoint-onboarding-ext` / `con-dev-onboarding-ext` 是轻量 delta，不重复完整 skill 的全部逻辑。
 
 ## AGENTS.md 注入 (大项目根目录)
 
